@@ -206,4 +206,15 @@ final class EmptyElementEmptyStringTests: XCTestCase {
         let result = try XMLDecoder().decode(NestingContainer.self, from: xml.data(using: .utf8)!)
         XCTAssertEqual(expected, result)
     }
+    
+    func testEmptyElementsREmoved() throws {
+        let xml = """
+        <thing>
+        <attribute/>
+        </thing>
+        """
+        let expected = Thing(attribute: nil, value: "")
+        let result = try XMLDecoder(removeEmptyElements: true).decode(Thing.self, from: xml.data(using: .utf8)!)
+        XCTAssertEqual(expected, result)
+    }
 }

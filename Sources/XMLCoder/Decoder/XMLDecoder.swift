@@ -318,6 +318,11 @@ open class XMLDecoder {
      */
     open var removeWhitespaceElements: Bool
 
+    /** A boolean value that determines if empty elements like <element/> must
+     be treated as nil
+     */
+    open var removeEmptyElements: Bool
+    
     /// Options set on the top-level encoder to pass down the decoding hierarchy.
     struct Options {
         let dateDecodingStrategy: DateDecodingStrategy
@@ -326,6 +331,7 @@ open class XMLDecoder {
         let keyDecodingStrategy: KeyDecodingStrategy
         let nodeDecodingStrategy: NodeDecodingStrategy
         let userInfo: [CodingUserInfoKey: Any]
+        let removeEmptyElements: Bool
     }
 
     /// The options set on the top-level decoder.
@@ -336,16 +342,18 @@ open class XMLDecoder {
             nonConformingFloatDecodingStrategy: nonConformingFloatDecodingStrategy,
             keyDecodingStrategy: keyDecodingStrategy,
             nodeDecodingStrategy: nodeDecodingStrategy,
-            userInfo: userInfo
+            userInfo: userInfo,
+            removeEmptyElements: removeEmptyElements
         )
     }
 
     // MARK: - Constructing a XML Decoder
 
     /// Initializes `self` with default strategies.
-    public init(trimValueWhitespaces: Bool = true, removeWhitespaceElements: Bool = false) {
+    public init(trimValueWhitespaces: Bool = true, removeWhitespaceElements: Bool = false, removeEmptyElements: Bool = false) {
         self.trimValueWhitespaces = trimValueWhitespaces
         self.removeWhitespaceElements = removeWhitespaceElements
+        self.removeEmptyElements = removeEmptyElements
     }
 
     // MARK: - Decoding Values
@@ -366,7 +374,8 @@ open class XMLDecoder {
             errorContextLength: errorContextLength,
             shouldProcessNamespaces: shouldProcessNamespaces,
             trimValueWhitespaces: trimValueWhitespaces,
-            removeWhitespaceElements: removeWhitespaceElements
+            removeWhitespaceElements: removeWhitespaceElements,
+            trimEmptyElements: removeEmptyElements
         )
 
         let decoder = XMLDecoderImplementation(

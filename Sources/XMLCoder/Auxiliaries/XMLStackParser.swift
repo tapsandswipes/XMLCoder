@@ -16,10 +16,12 @@ class XMLStackParser: NSObject {
     private var stack: [XMLCoderElement] = []
     private let trimValueWhitespaces: Bool
     private let removeWhitespaceElements: Bool
+    private let trimEmptyElements: Bool
 
-    init(trimValueWhitespaces: Bool = true, removeWhitespaceElements: Bool = false) {
+    init(trimValueWhitespaces: Bool = true, removeWhitespaceElements: Bool = false, trimEmptyElements: Bool = false) {
         self.trimValueWhitespaces = trimValueWhitespaces
         self.removeWhitespaceElements = removeWhitespaceElements
+        self.trimEmptyElements = trimEmptyElements
         super.init()
     }
 
@@ -28,10 +30,12 @@ class XMLStackParser: NSObject {
         errorContextLength length: UInt,
         shouldProcessNamespaces: Bool,
         trimValueWhitespaces: Bool,
-        removeWhitespaceElements: Bool
+        removeWhitespaceElements: Bool,
+        trimEmptyElements: Bool
     ) throws -> Box {
         let parser = XMLStackParser(trimValueWhitespaces: trimValueWhitespaces,
-                                    removeWhitespaceElements: removeWhitespaceElements)
+                                    removeWhitespaceElements: removeWhitespaceElements,
+                                    trimEmptyElements: trimEmptyElements)
 
         let node = try parser.parse(
             with: data,
@@ -147,6 +151,10 @@ extension XMLStackParser: XMLParserDelegate {
             element.trimTextNodes()
         }
 
+        if trimEmptyElements {
+            element.trimEmptyNodes()
+        }
+        
         let updatedElement = removeWhitespaceElements ? elementWithFilteredElements(element: element) : element
 
         withCurrentElement { currentElement in

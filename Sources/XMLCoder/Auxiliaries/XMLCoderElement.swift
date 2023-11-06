@@ -111,6 +111,12 @@ struct XMLCoderElement: Equatable {
         }
     }
 
+    mutating func trimEmptyNodes() {
+        elements.removeAll {
+            $0.stringValue  == nil && $0.elements.isEmpty && $0.attributes.isEmpty
+        }
+    }
+    
     func transformToBoxTree() -> Box {
         if isTextNode {
             return StringBox(stringValue!)
