@@ -207,7 +207,7 @@ final class EmptyElementEmptyStringTests: XCTestCase {
         XCTAssertEqual(expected, result)
     }
     
-    func testEmptyElementsREmoved() throws {
+    func testEmptyElementsRemoved() throws {
         let xml = """
         <thing>
         <attribute/>
